@@ -93,7 +93,7 @@
             <scope>runtime</scope>
         </dependency>
 
-    </dependencies>F
+    </dependencies>
 
     <build>
         <plugins>
