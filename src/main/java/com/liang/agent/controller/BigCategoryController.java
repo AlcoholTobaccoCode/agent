@@ -2,17 +2,26 @@ package com.liang.agent.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.liang.agent.annotation.ApiResponse;
 import com.liang.agent.dto.BigCategoryDTO;
+import com.liang.agent.dto.GraphNode;
 import com.liang.agent.entity.BigCategory;
 import com.liang.agent.entity.SmallCategory;
 import com.liang.agent.repository.BigCategoryRep;
+import com.liang.agent.repository.SmallCategoryRep;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,6 +40,9 @@ public class BigCategoryController {
 
     @Resource
     BigCategoryRep bigCategoryRep;
+
+    @Resource
+    SmallCategoryRep smallCategoryRep;
 
     @PostMapping(value = "/add")
     public ApiResponse<Object> add(@RequestBody BigCategoryDTO bigCategoryDTO) {
@@ -76,18 +88,10 @@ public class BigCategoryController {
         log.info("传入的对象-------{}", JSON.toJSONString(bigCategoryDTO));
         PageRequest pageRequest = PageRequest.of(bigCategoryDTO.getPageNum(), bigCategoryDTO.getPageSize());
 
-        Page<SmallCategory> plist = bigCategoryRep.findByNameContaining(bigCategoryDTO.getName(), pageRequest);
+        Page<BigCategory> plist = bigCategoryRep.findByNameContaining(bigCategoryDTO.getName(), pageRequest);
         return ApiResponse.success(plist);
     }
 
-//    @GetMapping(value = "/findall")
-//    public ApiResponse<Object> findall(@RequestParam String name) throws Exception {
-//
-////        List<Person> all = neo4jRepository.findAll();
-////        log.info("根据用户名查询到的用户列表-----{}", JSON.toJSONString(all));
-////        return ApiResponse.success(all);
-//        return null;
-//    }
 
 
 }

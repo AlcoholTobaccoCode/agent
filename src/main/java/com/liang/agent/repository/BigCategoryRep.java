@@ -10,6 +10,8 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 @EnableNeo4jRepositories
 public interface BigCategoryRep extends Neo4jRepository<BigCategory,Long> {
 
@@ -22,7 +24,16 @@ public interface BigCategoryRep extends Neo4jRepository<BigCategory,Long> {
 
     @Query(value = "MATCH (n:bigcategory) WHERE n.name CONTAINS $name RETURN n",
             countQuery = "MATCH (n:bigcategory) WHERE n.name CONTAINS $name RETURN count(n)")
-    Page<SmallCategory> findByNameContaining(String name, Pageable pageable);
+    Page<BigCategory> findByNameContaining(String name, Pageable pageable);
 
 
+    @Query(value = "MATCH (n) RETURN n",
+            countQuery = "MATCH (n) RETURN count(n)")
+    Page<AllNodes> findAllType(@Param("name") String name, Pageable pageable);
+
+
+    public class AllNodes{
+        public BigCategory bigCategory;
+        public  SmallCategory smallCategory;
+    }
 }

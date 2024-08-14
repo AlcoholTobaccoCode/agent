@@ -26,4 +26,6 @@ public class BigCategoryDTO {
     private String name;
     List<SmallCategoryDTO> smCategories;
 
+    private String type;
+
 }

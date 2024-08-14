@@ -1,5 +1,6 @@
 package com.liang.agent.entity;
 
+import com.liang.agent.dto.GraphNode;
 import lombok.Data;
 import org.springframework.data.neo4j.core.schema.*;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 @Node(labels = "smallcategory")
 
-public class SmallCategory {
+public class SmallCategory implements GraphNode {
     @Id
     @GeneratedValue
     private Long id;
@@ -30,6 +31,9 @@ public class SmallCategory {
     @Relationship(type = "子类",direction = Relationship.Direction.INCOMING)
     private BigCategory bigCategory;
 
-
+    @Override
+    public String getType() {
+        return "smallcategory";
+    }
 
 }

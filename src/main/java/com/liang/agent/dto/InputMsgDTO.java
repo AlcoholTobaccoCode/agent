@@ -71,14 +71,14 @@ public class InputMsgDTO {
 
 
 ///////////////////////////新增处理部分//////////////////////////////////////////
-//    private boolean isRepeat;
-//    private List<String> repeatTaskNo;
-//    private String responsibleUnitId;
-//    private String responsibleUnotName;
-//    private String deptName;
-//    private List<String> updatekeys;
+    private boolean isRepeat;
+    private List<String> repeatTaskNo;
+    private String responsibleUnitId;
+    private String responsibleUnotName;
+    private String deptName;
+    private List<String> updatekeys;
 
-    private addContentDTO addContent;
+   // private addContentDTO addContent;
 
 
 /////////////////////////////////新增处理部分//////////////////////////////////////

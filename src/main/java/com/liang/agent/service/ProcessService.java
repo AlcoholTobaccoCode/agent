@@ -1,7 +1,6 @@
 package com.liang.agent.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -11,9 +10,7 @@ import com.liang.agent.dto.CompletionRes;
 import com.liang.agent.dto.InputMsgDTO;
 import com.liang.agent.dto.addContentDTO;
 import com.liang.agent.entity.CategoryHistory;
-import com.liang.agent.entity.Config;
 import com.liang.agent.mapper.CategoryHistoryMapper;
-import com.liang.agent.mapper.ConfigMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -47,8 +44,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         // .addHeader("OpenAI-Beta", "assistants=v2");
     }
 
-    @Autowired
-    private ConfigMapper configMapper;
 
     @Value("${BASE_URL}")
     private String BASE_URL;
@@ -57,12 +52,9 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         log.info("请求已进入——————————————————————————");
         //逻辑一：直接大模型处理内容
         if ("12345热线数据".equals(inputMsg.getSource())) {
-
             String res = send(inputMsg.getContent());
             log.info("返回的res对象---------{}",res);
-
             CompletionRes completion = JSON.parseObject(res, CompletionRes.class);
-
             log.info("返回的data对象---------{}",completion.getChoices().get(0).getMessage().getContent());
             addContentDTO contentDTO =   JSON.parseObject(completion.getChoices().get(0).getMessage().getContent(), addContentDTO.class);
             return ApiResponse.success(contentDTO);

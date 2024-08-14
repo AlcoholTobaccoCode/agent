@@ -6,7 +6,7 @@
 <mapper namespace="com.fanjia.ai.mapper.ConfigMapper">
 
 
-    <select id="findAll"  resultType="com.liang.agent.entity.Config">
+    <select id="findAll"  resultType="com.liang.agent.entity.CategoryHistory">
         select  id,server_id
         from config;
     </select>
