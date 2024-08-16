@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.liang.agent.annotation.ApiResponse;
-import com.liang.agent.dto.Completion;
-import com.liang.agent.dto.CompletionRes;
-import com.liang.agent.dto.InputMsgDTO;
-import com.liang.agent.dto.addContentDTO;
+import com.liang.agent.dto.*;
 import com.liang.agent.entity.CategoryHistory;
+import com.liang.agent.entity.Event;
 import com.liang.agent.mapper.CategoryHistoryMapper;
+import com.liang.agent.repository.EventRep;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +48,19 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
     @Value("${BASE_URL}")
     private String BASE_URL;
 
-    public ApiResponse infoProcess(InputMsgDTO inputMsg) {
+    @Resource
+    private EventRep eventRep;
+
+
+    public ApiResponse infoProcess(EvnetInput inputMsg) {
         log.info("请求已进入——————————————————————————");
         //逻辑一：直接大模型处理内容
         if ("12345热线数据".equals(inputMsg.getSource())) {
             String res = send(inputMsg.getContent());
-            log.info("返回的res对象---------{}",res);
+            log.info("返回的res对象---------{}", res);
             CompletionRes completion = JSON.parseObject(res, CompletionRes.class);
-            log.info("返回的data对象---------{}",completion.getChoices().get(0).getMessage().getContent());
-            addContentDTO contentDTO =   JSON.parseObject(completion.getChoices().get(0).getMessage().getContent(), addContentDTO.class);
+            log.info("返回的data对象---------{}", completion.getChoices().get(0).getMessage().getContent());
+            addContentDTO contentDTO = JSON.parseObject(completion.getChoices().get(0).getMessage().getContent(), addContentDTO.class);
             return ApiResponse.success(contentDTO);
         } else {
             //逻辑二：跟mysql中已有数据比较，比对是否重复
@@ -81,7 +86,7 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         RequestBody bodyOk = RequestBody.create(mediaType, JSON.toJSONString(com));
         Request req = requestBuilder
-                .url(BASE_URL+"/v1/chat/completions")
+                .url(BASE_URL + "/v1/chat/completions")
                 .post(bodyOk)
                 .build();
 
@@ -107,26 +112,24 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         return null;
     }
 
-    private boolean judgeRepeat(InputMsgDTO inputMsg) {
-        QueryWrapper<CategoryHistory> queryWrapper = new QueryWrapper<>();
-
-        if (StringUtils.isNotBlank(inputMsg.getCategoryBigSym())) {
-            queryWrapper.eq("category_big_sym", inputMsg.getCategoryBigSym());
-        }
-        if (StringUtils.isNotBlank(inputMsg.getCategorySmallSym())) {
-            queryWrapper.eq("category_small_sym", inputMsg.getCategorySmallSym());
-        }
-        if (StringUtils.isNotBlank(inputMsg.getAddress())) {
-            queryWrapper.eq("address", inputMsg.getAddress());
-        }
+    private boolean judgeRepeat(EvnetInput inputMsg) {
 
 
-        List<CategoryHistory> categoryHistoryList = baseMapper.selectList(queryWrapper);
-        log.info("数据库查询结果---------{}", categoryHistoryList);
-        if (categoryHistoryList.isEmpty()) {
+        List<Event> byProperties = eventRep.findByProperties(inputMsg.getCategory_big_sym(), inputMsg.getCategory_small_sym(),
+                inputMsg.getAddress());
+        log.info("返回的eventList--------{}", JSON.toJSONString(byProperties));
+        if (byProperties.isEmpty()) {
             return false;
         } else {
-            return true;
+            boolean found = false;
+            for (Event e : byProperties) {
+                long daysBetween = ChronoUnit.DAYS.between(e.getCreated_at(), inputMsg.getCreated_at());
+                if (daysBetween <= 200) {
+                    found = true;
+                    break;
+                }
+            }
+            return found;
         }
     }
 }
