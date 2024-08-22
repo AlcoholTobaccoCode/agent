@@ -202,7 +202,7 @@ public class Event {
     // 假设<id>或第二个id字段作为业务主键
     @Id
     @Property("id")
-    private Long businessId; // 使用"businessId"以避免与Neo4j内部ID混淆
+    private String businessId; // 使用"businessId"以避免与Neo4j内部ID混淆
 
     @Property("<elementId>")
     private String elementId; // 保持原样，根据业务需求决定是否需要处理或存储
@@ -211,10 +211,10 @@ public class Event {
     private String address;
 
     @Property("category_big_sym")
-    private Long categoryBigSym; // 修改为非ID形式，根据实际含义可能需要关联实体
+    private String categoryBigSym; // 修改为非ID形式，根据实际含义可能需要关联实体
 
     @Property("category_small_sym")
-    private Long categorySmallSym; // 同上，考虑是否关联到Category实体
+    private String categorySmallSym; // 同上，考虑是否关联到Category实体
 
 
 
