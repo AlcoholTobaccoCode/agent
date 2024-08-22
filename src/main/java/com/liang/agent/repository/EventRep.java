@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface EventRep extends Neo4jRepository<Event,Long> {
+public interface EventRep extends Neo4jRepository<Event,String> {
 
 //    @Query("MATCH (bc:event) " +
 //            "WHERE ($name IS NULL OR bc.name = $name) " +
