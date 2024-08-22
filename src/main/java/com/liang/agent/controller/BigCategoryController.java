@@ -88,7 +88,7 @@ public class BigCategoryController {
         log.info("传入的对象-------{}", JSON.toJSONString(bigCategoryDTO));
         PageRequest pageRequest = PageRequest.of(bigCategoryDTO.getPageNum(), bigCategoryDTO.getPageSize());
 
-        Page<BigCategory> plist = bigCategoryRep.findByNameContaining(bigCategoryDTO.getName(), pageRequest);
+        Page<BigCategory> plist = bigCategoryRep.findByName(bigCategoryDTO.getName(), pageRequest);
         return ApiResponse.success(plist);
     }
 

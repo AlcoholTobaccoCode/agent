@@ -10,6 +10,10 @@ spring:
     authentication:
       username: neo4j
       password: hPIN2G5XB1w1
+#     uri: bolt://localhost:7690
+#     authentication:
+#       username: neo4j
+#       password: 222222222
 
   #####?????#####
   datasource:

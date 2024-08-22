@@ -47,7 +47,6 @@ public class SmallCategoryController {
         if (0 != smCategoryDTO.getBigId()) {
             Optional<BigCategory> byId = bigCategoryRep.findById(smCategoryDTO.getBigId());
             BigCategory bigCategory = byId.get();
-            smallCategory.setBigCategory(bigCategory);
         }
 
         log.info("存入数据库的smallCategory对象-------{}", JSON.toJSONString(smallCategory));
@@ -105,15 +104,13 @@ public class SmallCategoryController {
     public ApiResponse findbyname(@RequestBody SmallCategoryDTO smallCategory) {
         log.info("传入的对象-------{}", JSON.toJSONString(smallCategory));
         PageRequest pageRequest = PageRequest.of(smallCategory.getPageNum(), smallCategory.getPageSize());
-        //PageRequest pageRequest = PageRequest.of(0, 5);
 
-        Page<SmallCategory> plist = smallCategoryRep.findByNameContaining(smallCategory.getName(), pageRequest);
+        Page<SmallCategory> plist = smallCategoryRep.findByName(smallCategory.getName(), pageRequest);
         return ApiResponse.success(plist);
     }
 
     @GetMapping(value = "/findall")
     public ApiResponse findall(@RequestParam String name) throws Exception {
-
 //        List<Person> all = neo4jRepository.findAll();
 //        log.info("根据用户名查询到的用户列表-----{}", JSON.toJSONString(all));
 //        return ApiResponse.success(all);

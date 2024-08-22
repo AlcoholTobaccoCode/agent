@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-@EnableNeo4jRepositories
+
 public interface BigCategoryRep extends Neo4jRepository<BigCategory,Long> {
 
     Page<BigCategory> findByNameLike(@Param("name") String name, Pageable pageable);
@@ -27,11 +27,15 @@ public interface BigCategoryRep extends Neo4jRepository<BigCategory,Long> {
     Page<BigCategory> findByNameContaining(String name, Pageable pageable);
 
 
+
+
+
+    Page<BigCategory> findByName(@Param("name") String name, Pageable pageable);
+
+
     @Query(value = "MATCH (n) RETURN n",
             countQuery = "MATCH (n) RETURN count(n)")
     Page<AllNodes> findAllType(@Param("name") String name, Pageable pageable);
-
-
     public class AllNodes{
         public BigCategory bigCategory;
         public  SmallCategory smallCategory;

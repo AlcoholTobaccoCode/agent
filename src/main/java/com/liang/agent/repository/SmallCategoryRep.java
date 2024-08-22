@@ -21,4 +21,8 @@ public interface SmallCategoryRep extends Neo4jRepository<SmallCategory,Long> {
             countQuery = "MATCH (n:smallcategory) WHERE n.name CONTAINS $name RETURN count(n)")
     Page<SmallCategory> findByNameContaining(String name, Pageable pageable);
 
+
+
+    Page<SmallCategory> findByName(@Param("name") String name, Pageable pageable);
+
 }

@@ -2,6 +2,7 @@ package com.liang.agent.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.liang.agent.annotation.ApiResponse;
+import com.liang.agent.dto.EvnetInput;
 import com.liang.agent.dto.InputMsgDTO;
 import com.liang.agent.service.ProcessService;
 import jakarta.annotation.Resource;
@@ -28,7 +29,7 @@ public class ProcessController {
     ProcessService processService;
 
     @PostMapping(value = "/process")
-    public ApiResponse add(@RequestBody InputMsgDTO inputMsg) {
+    public ApiResponse add(@RequestBody EvnetInput inputMsg) {
         log.info("传入的对象-------{}", JSON.toJSONString(inputMsg));
         return processService.infoProcess(inputMsg) ;
 
