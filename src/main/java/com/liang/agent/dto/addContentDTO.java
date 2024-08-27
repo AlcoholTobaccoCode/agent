@@ -16,12 +16,10 @@ import java.util.List;
 public class addContentDTO {
 
     private boolean isRepeat;
+    private String  address;
+    private String categorySmallName;
+    private String responsibleUnit;
+    private String responsibleDepartment;
+    private String reportTime;
 
-    private List<String> repeatTaskNo;
-
-    private String responsibleUnitId;
-
-    private String responsibleUnitName;
-    private String deptName;
-    private List<String> updatekeys;
 }

@@ -67,7 +67,7 @@ public class EvnetInput {
 
     private String reporter;
 
-    private Date report_time;
+    private String report_time;
 
     private String descr;
 
@@ -138,5 +138,7 @@ public class EvnetInput {
     private String content;
 
     private boolean isRepeat;
+
+    private addContentDTO addContentDTO;
 
 }
