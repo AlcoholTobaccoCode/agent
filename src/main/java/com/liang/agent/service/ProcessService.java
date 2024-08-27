@@ -60,7 +60,12 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
             Input4LLM input4LLM = BeanUtil.copyProperties(inputMsg, Input4LLM.class);
 
 
-            String res = send(input4LLM);
+            String res = null;
+            try {
+                res = send(input4LLM);
+            } catch (Exception e) {
+                return ApiResponse.fail(500,"LLM大语言模型服务错误！");
+            }
             log.info("返回的res对象---------{}", res);
             CompletionRes completion = JSON.parseObject(res, CompletionRes.class);
             String content = completion.getChoices().get(0).getMessage().getContent();
@@ -119,11 +124,10 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
                 String body = response.body().string();
                 return body;
             } else {
-                log.info("请求失败");
-
                 ResponseBody errorBody = response.body();
                 if (errorBody != null) {
-                    return errorBody.string();
+                    log.info("请求失败---————————{}",errorBody.string());
+                    throw new RuntimeException(errorBody.string());
                 }
             }
         } catch (IOException ex) {
