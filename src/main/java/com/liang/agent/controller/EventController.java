@@ -30,8 +30,8 @@ public class EventController {
     @PostMapping(value = "/addevent")
     public ApiResponse add(@RequestBody EventInput inputMsg) {
         log.info("传入的对象-------{}", JSON.toJSONString(inputMsg));
-        return processService.addEvent(inputMsg) ;
-
+        //  return processService.addEvent(inputMsg) ;
+        return null;
     }
 
 }
