@@ -155,6 +155,9 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
 
         log.info("返回的eventList--------{}", JSON.toJSONString(byProperties));
         if (byProperties.isEmpty()) {
+
+            this.addEvent(inputMsg);
+
             return false;
         } else {
             boolean found = false;
@@ -170,7 +173,7 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
     }
 
 
-    public ApiResponse addEvent(EventInput inputMsg){
+    public void addEvent(EventInput inputMsg){
         log.info("传入service层的EventInput对象------{}",inputMsg);
 
         Event event = BeanUtil.copyProperties(inputMsg, Event.class);
@@ -185,6 +188,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
 
         log.info("存入数据库的event对象------{}",event);
         Event saved = eventRep.save(event);
-        return ApiResponse.success(saved);
+       // return ApiResponse.success(saved);
     }
 }
