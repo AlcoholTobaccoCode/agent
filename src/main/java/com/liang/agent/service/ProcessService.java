@@ -64,8 +64,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         //逻辑一：直接大模型处理内容
         if ("12345热线数据".equals(inputMsg.getSource())) {
             Input4LLM input4LLM = BeanUtil.copyProperties(inputMsg, Input4LLM.class);
-
-
             String res = null;
             try {
                 res = send(input4LLM);
@@ -87,7 +85,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
                 }
             }
 
-
             addContentDTO contentDTO = JSON.parseObject(content, addContentDTO.class);
             contentDTO.setReportTime(inputMsg.getReport_time());
             inputMsg.setAddContentDTO(contentDTO);
@@ -99,7 +96,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
             inputMsg.setRepeat(repeat);
             return ApiResponse.success(inputMsg);
         }
-
 
     }
 
@@ -144,20 +140,15 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
 
     private boolean judgeRepeat(EventInput inputMsg) {
 
-
         log.info("service层传入的参数对象---------{}", JSON.toJSONString(inputMsg));
-
         List<Event> byProperties = eventRep.findEventsByBidSidAndAddress(inputMsg.getCategory_big_name(), inputMsg.getCategory_small_name(),
                 inputMsg.getAddress());
-
 //        List<Event> byProperties = eventRep.findEventsByBidSidAndAddress2(inputMsg.getCategory_big_sym(), inputMsg.getCategory_small_sym(),
 //                inputMsg.getAddress());
 
         log.info("返回的eventList--------{}", JSON.toJSONString(byProperties));
         if (byProperties.isEmpty()) {
-
             this.addEvent(inputMsg);
-
             return false;
         } else {
             boolean found = false;
@@ -177,7 +168,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
         log.info("传入service层的EventInput对象------{}",inputMsg);
 
         Event event = BeanUtil.copyProperties(inputMsg, Event.class);
-
         Optional<SmallCategory> byId = smallCategoryRep.findByName(inputMsg.getCategory_small_name());
         if (byId.isPresent()){
             SmallCategory smallCategory = byId.get();
