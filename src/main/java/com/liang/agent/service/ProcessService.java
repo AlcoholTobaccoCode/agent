@@ -75,13 +75,23 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
             String content = completion.getChoices().get(0).getMessage().getContent();
 
             // 检查并移除前缀
-            String prefix = "```json\n";
-            if (content.startsWith(prefix)) {
-                content = content.substring(prefix.length());
+            String[] prefixes = {"```json", "```python", "```markdown"};
+            String[] suffixes = {"```"};
 
-                // 移除结尾的反引号
-                if (content.endsWith("```")) {
-                    content = content.substring(0, content.length() - 4);
+            for (String prefix : prefixes) {
+                if (content.startsWith(prefix)) {
+                    // 修剪开头的前缀
+                    content = content.substring(prefix.length());
+
+                    // 检查是否以对应的结尾标记结尾，并修剪它
+                    for (String suffix : suffixes) {
+                        if (content.endsWith(suffix)) {
+                            content = content.substring(0, content.length() - suffix.length());
+                            break; // 找到匹配的结尾标记后退出内层循环
+                        }
+                    }
+                    // 既然已经处理了前缀和结尾标记，就可以退出外层循环了
+                    break; // 找到匹配的前缀后退出外层循环
                 }
             }
 
@@ -102,7 +112,7 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
 
     private String send(Input4LLM input4LLM) {
 
-        //String jsonString = JSON.toJSONString(input4LLM);
+        log.info("service层传入的参数对象---------{}", JSON.toJSONString(input4LLM));
         Completion com = new Completion();
         List<Completion.Message> messages = new ArrayList<>();
         Completion.Message message = new Completion.Message();
