@@ -26,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: agent
@@ -127,7 +128,14 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
                 .post(bodyOk)
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)  // 启用连接失败自动重试
+                .build();
+       // OkHttpClient client = new OkHttpClient();
         Call call = client.newCall(req);
         try (Response response = call.execute()) {
             if (response.isSuccessful()) {
@@ -188,6 +196,6 @@ public class ProcessService extends ServiceImpl<CategoryHistoryMapper, CategoryH
 
         log.info("存入数据库的event对象------{}",event);
         Event saved = eventRep.save(event);
-       // return ApiResponse.success(saved);
+        // return ApiResponse.success(saved);
     }
 }
