@@ -18,6 +18,7 @@ public class addContentDTO {
     private boolean isRepeat;
     private String  address;
     private String categorySmallName;
+    private String categoryBigName;
     private String responsibleUnit;
     private String responsibleDepartment;
     private String reportTime;
